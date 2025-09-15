@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GST Stock & Sales Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #16a34a;
+            --background-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 24px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            padding: 24px 0;
+        }
+
+        nav button {
+            flex: 1;
+            padding: 12px 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            max-width: 200px;
+        }
+
+        nav button:hover {
+            background-color: #1e40af;
+        }
+
+        section {
+            display: none;
+            background-color: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        input, select {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #f9fafb;
+            transition: border-color 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        button {
+            padding: 12px;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #15803d;
+        }
+
+        .download-btn {
+            background-color: #64748b;
+            margin-top: 16px;
+        }
+
+        .download-btn:hover {
+            background-color: #475569;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+        }
+
+        .low-stock {
+            background-color: #fef3c7;
+        }
+
+        .zero-stock {
+            background-color: #fee2e2;
+        }
+
+        .summary {
+            max-width: 500px;
+            margin: 0 auto;
+            font-size: 1rem;
+        }
+
+        .summary p {
+            padding: 12px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            header {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            nav {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 16px;
+            }
+
+            nav button {
+                max-width: none;
+                padding: 14px;
+                font-size: 1rem;
+            }
+
+            section {
+                padding: 16px;
+                margin-bottom: 16px;
+            }
+
+            h2 {
+                font-size: 1.25rem;
+                margin-bottom: 16px;
+            }
+
+            form {
+                gap: 12px;
+            }
+
+            table {
+                font-size: 0.85rem;
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            th, td {
+                padding: 10px;
+                min-width: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            input, select, button {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            h2 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>GST Stock & Sales Management</h1>
+    </header>
+    <nav>
+        <button onclick="showSection('purchase')">Add Purchase Bill</button>
+        <button onclick="showSection('sell')">Sell Product</button>
+        <button onclick="showSection('stock')">Stock View</button>
+        <button onclick="showSection('gst')">GST Summary</button>
+    </nav>
+    <div class="container">
+        <section id="purchase">
+            <h2>Add Purchase Bill</h2>
+            <form id="purchaseForm">
+                <label for="productName">Product Name:</label>
+                <input type="text" id="productName" required>
+                
+                <label for="hsnCode">HSN Code:</label>
+                <input type="text" id="hsnCode" required>
+                
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" min="1" required>
+                
+                <label for="pricePerUnit">Price/Unit (excluding GST):</label>
+                <input type="number" id="pricePerUnit" min="0" step="0.01" required>
+                
+                <label for="gstRate">GST Rate:</label>
+                <select id="gstRate" required>
+                    <option value="5">5%</option>
+                    <option value="12">12%</option>
+                    <option value="18">18%</option>
+                    <option value="28">28%</option>
+                </select>
+                
+                <button type="button" onclick="addPurchase()">Save Purchase</button>
+            </form>
+        </section>
+        
+        <section id="sell">
+            <h2>Sell Product</h2>
+            <form id="sellForm">
+                <label for="sellHsnCode">HSN Code:</label>
+                <input type="text" id="sellHsnCode" required oninput="populateProducts()">
+                
+                <label for="productSelect">Select Product:</label>
+                <select id="productSelect" required>
+                    <option value="">-- Select Product --</option>
+                </select>
+                
+                <label for="sellQuantity">Quantity to Sell:</label>
+                <input type="number" id="sellQuantity" min="1" required>
+                
+                <button type="button" onclick="confirmSale()">Confirm Sale</button>
+            </form>
+        </section>
+        
+        <section id="stock">
+            <h2>Current Stock</h2>
+            <button class="download-btn" onclick="downloadStockCsv()">Download Stock List (CSV)</button>
+            <table id="stockTable">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>HSN Code</th>
+                        <th>Quantity</th>
+                        <th>Price/Unit</th>
+                        <th>GST Rate</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+        
+        <section id="gst">
+            <h2>GST Summary</h2>
+            <button class="download-btn" onclick="downloadGstSummaryCsv()">Download GST Summary (CSV)</button>
+            <div class="summary" id="gstSummary"></div>
+            <h3>Purchase Summary</h3>
+            <button class="download-btn" onclick="downloadPurchaseSummaryCsv()">Download Purchase Summary (CSV)</button>
+            <table id="purchaseTable">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>HSN Code</th>
+                        <th>Quantity</th>
+                        <th>Price/Unit</th>
+                        <th>GST Rate</th>
+                        <th>GST Amount</th>
+                        <th>Total Value</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <h3>Sales Summary</h3>
+            <button class="download-btn" onclick="downloadSalesSummaryCsv()">Download Sales Summary (CSV)</button>
+            <table id="salesTable">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>HSN Code</th>
+                        <th>Quantity</th>
+                        <th>Price/Unit</th>
+                        <th>GST Rate</th>
+                        <th>GST Amount</th>
+                        <th>Total Value</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+    </div>
+
+    <script>
+        let stock = [];
+        let purchases = [];
+        let sales = [];
+        let nextId = 1;
+
+        // Validate item structure
+        function isValidItem(item) {
+            return item &&
+                typeof item.id === 'number' &&
+                typeof item.name === 'string' &&
+                typeof item.hsn === 'string' &&
+                typeof item.qty === 'number' &&
+                typeof item.price === 'number' &&
+                typeof item.gstRate === 'number' &&
+                typeof item.gstAmount === 'number' &&
+                typeof item.totalValue === 'number' &&
+                typeof item.timestamp === 'string';
+        }
+
+        // Load data from localStorage with validation
+        function loadData() {
+            const storedStock = localStorage.getItem('stock');
+            const storedPurchases = localStorage.getItem('purchases');
+            const storedSales = localStorage.getItem('sales');
+            const storedNextId = localStorage.getItem('nextId');
+
+            if (storedStock) {
+                try {
+                    stock = JSON.parse(storedStock).filter(item => 
+                        item && 
+                        typeof item.id === 'number' &&
+                        typeof item.name === 'string' &&
+                        typeof item.hsn === 'string' &&
+                        typeof item.qty === 'number' &&
+                        typeof item.price === 'number' &&
+                        typeof item.gstRate === 'number'
+                    );
+                } catch (e) {
+                    console.error('Error parsing stock data:', e);
+                    stock = [];
+                }
+            }
+            if (storedPurchases) {
+                try {
+                    purchases = JSON.parse(storedPurchases).filter(isValidItem);
+                } catch (e) {
+                    console.error('Error parsing purchases data:', e);
+                    purchases = [];
+                }
+            }
+            if (storedSales) {
+                try {
+                    sales = JSON.parse(storedSales).filter(isValidItem);
+                } catch (e) {
+                    console.error('Error parsing sales data:', e);
+                    sales = [];
+                }
+            }
+            if (storedNextId) {
+                const parsedId = parseInt(storedNextId);
+                if (!isNaN(parsedId)) nextId = parsedId;
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('stock', JSON.stringify(stock));
+            localStorage.setItem('purchases', JSON.stringify(purchases));
+            localStorage.setItem('sales', JSON.stringify(sales));
+            localStorage.setItem('nextId', nextId);
+        }
+
+        // Show specific section
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            if (sectionId === 'stock') updateStockTable();
+            if (sectionId === 'gst') updateGstSummary();
+        }
+
+        // Add purchase
+        function addPurchase() {
+            const name = document.getElementById('productName').value.trim();
+            const hsn = document.getElementById('hsnCode').value.trim();
+            const qty = parseFloat(document.getElementById('quantity').value);
+            const price = parseFloat(document.getElementById('pricePerUnit').value);
+            const gstRate = parseFloat(document.getElementById('gstRate').value);
+
+            if (!name || !hsn || isNaN(qty) || qty <= 0 || isNaN(price) || price < 0 || isNaN(gstRate)) {
+                alert('Please fill all fields correctly with valid values.');
+                return;
+            }
+
+            const gstAmount = qty * price * (gstRate / 100);
+            const totalValue = qty * price + gstAmount;
+            const timestamp = new Date().toISOString();
+
+            const purchase = { id: nextId, name, hsn, qty, price, gstRate, gstAmount, totalValue, timestamp };
+            purchases.push(purchase);
+
+            // Update or add to stock
+            const existingStockItem = stock.find(item => item.hsn === hsn && item.name === name && item.price === price && item.gstRate === gstRate);
+            if (existingStockItem) {
+                existingStockItem.qty += qty;
+            } else {
+                stock.push({ id: nextId, name, hsn, qty, price, gstRate });
+            }
+
+            nextId++;
+            saveData();
+            document.getElementById('purchaseForm').reset();
+            alert('Purchase added successfully.');
+        }
+
+        // Populate products for sale based on HSN
+        function populateProducts() {
+            const hsn = document.getElementById('sellHsnCode').value.trim();
+            const select = document.getElementById('productSelect');
+            select.innerHTML = '<option value="">-- Select Product --</option>';
+
+            if (!hsn) return;
+
+            const matching = stock.filter(item => item.hsn === hsn && item.qty > 0);
+            matching.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = `${item.name} (Qty: ${item.qty}, Price: ${item.price}, GST: ${item.gstRate}%)`;
+                select.appendChild(option);
+            });
+        }
+
+        // Confirm sale
+        function confirmSale() {
+            const itemId = parseInt(document.getElementById('productSelect').value);
+            const soldQty = parseFloat(document.getElementById('sellQuantity').value);
+
+            if (isNaN(itemId) || isNaN(soldQty) || soldQty <= 0) {
+                alert('Please select a product and enter a valid quantity.');
+                return;
+            }
+
+            const stockItem = stock.find(item => item.id === itemId);
+            if (!stockItem || soldQty > stockItem.qty) {
+                alert('Insufficient stock.');
+                return;
+            }
+
+            stockItem.qty -= soldQty;
+            if (stockItem.qty <= 0) {
+                stock = stock.filter(item => item.id !== itemId);
+            }
+
+            const gstAmount = soldQty * stockItem.price * (stockItem.gstRate / 100);
+            const totalValue = soldQty * stockItem.price + gstAmount;
+            const timestamp = new Date().toISOString();
+
+            const sale = {
+                id: nextId,
+                name: stockItem.name,
+                hsn: stockItem.hsn,
+                qty: soldQty,
+                price: stockItem.price,
+                gstRate: stockItem.gstRate,
+                gstAmount,
+                totalValue,
+                timestamp
+            };
+            sales.push(sale);
+
+            nextId++;
+            saveData();
+            document.getElementById('sellForm').reset();
+            populateProducts();
+            alert('Sale confirmed successfully.');
+        }
+
+        // Update stock table
+        function updateStockTable() {
+            const tbody = document.querySelector('#stockTable tbody');
+            tbody.innerHTML = '';
+
+            stock.forEach(item => {
+                const row = document.createElement('tr');
+                if (item.qty === 0) row.classList.add('zero-stock');
+                else if (item.qty < 5) row.classList.add('low-stock');
+
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.hsn}</td>
+                    <td>${item.qty}</td>
+                    <td>${item.price.toFixed(2)}</td>
+                    <td>${item.gstRate}%</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update GST summary and detailed tables
+        function updateGstSummary() {
+            const totalInput = purchases.reduce((sum, p) => sum + (p.gstAmount || 0), 0);
+            const totalOutput = sales.reduce((sum, s) => sum + (s.gstAmount || 0), 0);
+            const net = totalOutput - totalInput;
+
+            const summaryDiv = document.getElementById('gstSummary');
+            summaryDiv.innerHTML = `
+                <p>Total Input GST: ₹${totalInput.toFixed(2)}</p>
+                <p>Total Output GST: ₹${totalOutput.toFixed(2)}</p>
+                <p>Net GST Payable: ₹${net.toFixed(2)} ${net < 0 ? '(Credit)' : ''}</p>
+            `;
+
+            // Update purchase table
+            const purchaseTbody = document.querySelector('#purchaseTable tbody');
+            purchaseTbody.innerHTML = '';
+            purchases.forEach(item => {
+                if (!isValidItem(item)) return; // Skip invalid items
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.hsn}</td>
+                    <td>${item.qty}</td>
+                    <td>${item.price.toFixed(2)}</td>
+                    <td>${item.gstRate}%</td>
+                    <td>${(item.gstAmount || 0).toFixed(2)}</td>
+                    <td>${(item.totalValue || 0).toFixed(2)}</td>
+                    <td>${new Date(item.timestamp).toLocaleString()}</td>
+                `;
+                purchaseTbody.appendChild(row);
+            });
+
+            // Update sales table
+            const salesTbody = document.querySelector('#salesTable tbody');
+            salesTbody.innerHTML = '';
+            sales.forEach(item => {
+                if (!isValidItem(item)) return; // Skip invalid items
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.hsn}</td>
+                    <td>${item.qty}</td>
+                    <td>${item.price.toFixed(2)}</td>
+                    <td>${item.gstRate}%</td>
+                    <td>${(item.gstAmount || 0).toFixed(2)}</td>
+                    <td>${(item.totalValue || 0).toFixed(2)}</td>
+                    <td>${new Date(item.timestamp).toLocaleString()}</td>
+                `;
+                salesTbody.appendChild(row);
+            });
+        }
+
+        // Download stock list as CSV
+        function downloadStockCsv() {
+            let csv = 'Product Name,HSN Code,Quantity,Price/Unit,GST Rate\n';
+            stock.forEach(item => {
+                csv += `"${item.name.replace(/"/g, '""')}","${item.hsn}",${item.qty},${item.price.toFixed(2)},${item.gstRate}%\n`;
+            });
+            downloadCsv(csv, 'stock_list.csv');
+        }
+
+        // Download GST summary as CSV
+        function downloadGstSummaryCsv() {
+            const totalInput = purchases.reduce((sum, p) => sum + (p.gstAmount || 0), 0);
+            const totalOutput = sales.reduce((sum, s) => sum + (s.gstAmount || 0), 0);
+            const net = totalOutput - totalInput;
+
+            let csv = 'Metric,Value\n';
+            csv += `Total Input GST,₹${totalInput.toFixed(2)}\n`;
+            csv += `Total Output GST,₹${totalOutput.toFixed(2)}\n`;
+            csv += `Net GST Payable,₹${net.toFixed(2)} ${net < 0 ? '(Credit)' : ''}\n`;
+            downloadCsv(csv, 'gst_summary.csv');
+        }
+
+        // Download purchase summary as CSV
+        function downloadPurchaseSummaryCsv() {
+            let csv = 'Product Name,HSN Code,Quantity,Price/Unit,GST Rate,GST Amount,Total Value,Date\n';
+            purchases.forEach(item => {
+                if (!isValidItem(item)) return;
+                csv += `"${item.name.replace(/"/g, '""')}","${item.hsn}",${item.qty},${item.price.toFixed(2)},${item.gstRate}%,${(item.gstAmount || 0).toFixed(2)},${(item.totalValue || 0).toFixed(2)},${new Date(item.timestamp).toLocaleString()}\n`;
+            });
+            downloadCsv(csv, 'purchase_summary.csv');
+        }
+
+        // Download sales summary as CSV
+        function downloadSalesSummaryCsv() {
+            let csv = 'Product Name,HSN Code,Quantity,Price/Unit,GST Rate,GST Amount,Total Value,Date\n';
+            sales.forEach(item => {
+                if (!isValidItem(item)) return;
+                csv += `"${item.name.replace(/"/g, '""')}","${item.hsn}",${item.qty},${item.price.toFixed(2)},${item.gstRate}%,${(item.gstAmount || 0).toFixed(2)},${(item.totalValue || 0).toFixed(2)},${new Date(item.timestamp).toLocaleString()}\n`;
+            });
+            downloadCsv(csv, 'sales_summary.csv');
+        }
+
+        // Helper function to download CSV
+        function downloadCsv(csvContent, fileName) {
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', fileName);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Initial load
+        loadData();
+        showSection('purchase'); // Default section
+    </script>
+</body>
+</html>
